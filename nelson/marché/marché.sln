@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "marché", "marché\marché.csproj", "{2A58898D-F119-42B9-8B5E-E2268E3E5CDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "marché", "marché\marché.csproj", "{F23A5F72-C0B4-4377-82D2-2C3059CB368A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2A58898D-F119-42B9-8B5E-E2268E3E5CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A58898D-F119-42B9-8B5E-E2268E3E5CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A58898D-F119-42B9-8B5E-E2268E3E5CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A58898D-F119-42B9-8B5E-E2268E3E5CDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F23A5F72-C0B4-4377-82D2-2C3059CB368A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F23A5F72-C0B4-4377-82D2-2C3059CB368A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F23A5F72-C0B4-4377-82D2-2C3059CB368A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F23A5F72-C0B4-4377-82D2-2C3059CB368A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {01883F8D-F30C-4377-911B-FF797BA645DA}
+		SolutionGuid = {6F313E41-1034-4CAA-A53B-0E7687EF8220}
 	EndGlobalSection
 EndGlobal
