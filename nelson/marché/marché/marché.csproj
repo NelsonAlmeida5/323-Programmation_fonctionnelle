@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D6B30498-4AA6-4DCD-9B81-30A28BECB397}</ProjectGuid>
+    <ProjectGuid>{2A58898D-F119-42B9-8B5E-E2268E3E5CDA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>exo_marché</RootNamespace>
-    <AssemblyName>exo_marché</AssemblyName>
+    <RootNamespace>marché</RootNamespace>
+    <AssemblyName>marché</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
