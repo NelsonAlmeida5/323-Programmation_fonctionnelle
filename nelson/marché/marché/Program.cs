@@ -118,6 +118,16 @@ namespace marché
             products.Add(new Product() { Location = "15", Provider = "Crizzi", Name = "Myrtilles", Quantity = 12, Unit = "kg", Price = 3.00m });
             products.Add(new Product() { Location = "15", Provider = "Crizzi", Name = "Groseilles", Quantity = 12, Unit = "kg", Price = 3.50m });
 
+            /*
+            // ---- PASTÈQUES ----
+            var watermelons = products.Where(p => p.Name.ToLower() == "pastèques").ToList();
+
+            // Trouver celui qui en a le plus
+            var maxWatermelon = watermelons.OrderByDescending(p => p.Quantity).First();
+            */
+
+
+            // Pêches
             int peaches = 1;
             foreach (Product product in products)
             {
@@ -133,10 +143,17 @@ namespace marché
                 }
             }
 
-            Console.WriteLine($"Nombre de pêches : {peaches}");
+            int watermelon = 1;
+            int maxWatermelon = 1;
+            foreach(Product product in products)
+            {
+                if (Product.Name.ToLower() == "pastèques")
+                {
+                    
+                }
 
-
-
+            Console.WriteLine($"Il y a {peaches} vendeurs de pêches");
+            Console.WriteLine($"C'est {maxWatermelon.Provider} qui a le plus de pastèques (stand {maxWatermelon.Location}, {maxWatermelon.Quantity} {maxWatermelon.Unit})");
 
         }
     }
