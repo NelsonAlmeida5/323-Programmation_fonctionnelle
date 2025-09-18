@@ -127,34 +127,22 @@ namespace marché
             */
 
 
-            // Pêches
-            int peaches = 1;
-            foreach (Product product in products)
-            {
-                /*
-                if(Regex.IsMatch(product.Name.ToLower(),"^pêche"))
-                {
-                    peaches = peaches + 1;
-                }*/
+            // ---- Pêches ----
+            int peachVendors = products
+                .Where(p => p.Name.ToLower().StartsWith("pêche"))
+                .Select(p => p.Provider)
+                .Distinct()
+                .Count();
 
-                if (product.Name.ToLower() == "pêches")
-                {
-                    peaches = peaches + 1;
-                }
-            }
+            // ---- Pastèques ----
+            var maxWatermelon = products
+                .Where(p => p.Name.ToLower() == "pastèques")
+                .OrderByDescending(p => p.Quantity)
+                .First();
 
-            int watermelon = 1;
-            int maxWatermelon = 1;
-            foreach(Product product in products)
-            {
-                if (Product.Name.ToLower() == "pastèques")
-                {
-                    
-                }
-
-            Console.WriteLine($"Il y a {peaches} vendeurs de pêches");
+            // ---- Résultats ----
+            Console.WriteLine($"Il y a {peachVendors} vendeurs de pêches");
             Console.WriteLine($"C'est {maxWatermelon.Provider} qui a le plus de pastèques (stand {maxWatermelon.Location}, {maxWatermelon.Quantity} {maxWatermelon.Unit})");
-
         }
     }
 
