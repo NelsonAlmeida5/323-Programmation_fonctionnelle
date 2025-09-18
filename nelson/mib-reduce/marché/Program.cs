@@ -201,7 +201,7 @@ namespace marché
             .Select(g => new
             {
                 Vendor = g.Key,
-                Affinities = g.Count(p => g.Key.Contains(p.Name, StringComparison.OrdinalIgnoreCase))
+                Affinities = g.Count(p => g.Key.ToLower().Contains(p.Name.ToLower()))
             })
             .OrderByDescending(g => g.Affinities)
             .First();
