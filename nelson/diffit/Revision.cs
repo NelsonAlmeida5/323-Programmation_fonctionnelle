@@ -176,3 +176,163 @@ namespace RevisionPFUN
         }
     }
 }
+
+// =====================================================================
+// 7) MINI DIFF-TOOL (modèle proche du test) — prêt à copier/coller
+// ---------------------------------------------------------------------
+// Points-clés révisés ici :
+// - Lecture de fichiers (ReadAllLines)
+// - Nettoyage conditionnel via fonctions + Aggregate (composition)
+// - Comparaison ligne par ligne (Zip, comptage des différences)
+// - Affichage coloré des différences
+// - Petit chiffrement type César (lettres uniquement, wrap A–Z/a–z)
+
+using System.IO;
+
+namespace RevisionPFUN
+{
+    public static class DiffIt
+    {
+        public static void Run()
+        {
+            Console.WriteLine("+--------------------------------+");
+            Console.WriteLine("|DIFFIT : A very limited DIFFTOOL|");
+            Console.WriteLine("+--------------------------------+\n");
+
+            Console.Write("Fichier A: ");
+            string? pathA = Console.ReadLine();
+            Console.Write("Fichier B: ");
+            string? pathB = Console.ReadLine();
+
+            // ✅ Validation simple
+            if (string.IsNullOrWhiteSpace(pathA) || string.IsNullOrWhiteSpace(pathB) || !File.Exists(pathA) || !File.Exists(pathB))
+            {
+                Console.WriteLine("Erreur: les fichiers doivent exister et être accessibles.");
+                return;
+            }
+
+            // 1) Chargement
+            string[] linesA = File.ReadAllLines(pathA);
+            string[] linesB = File.ReadAllLines(pathB);
+
+            if (linesA.Length != linesB.Length)
+            {
+                Console.WriteLine("Erreur: les fichiers n'ont pas le même nombre de lignes.");
+                return;
+            }
+
+            Console.WriteLine(">Fichiers chargés avec succès\n");
+
+            // 2) Fonctions de nettoyage (pures)
+            Func<string, string> cleanSpaces = s => s.Replace(" ", "");
+            Func<string, string> cleanTabs = s => s.Replace("\t", "");
+            Func<string, string> enforceCase = s => s.ToLowerInvariant();
+
+            // 3) Options utilisateur → on construit un PIPELINE de nettoyage
+            Console.Write("-Ignorer les espaces [o/n]: "); bool ignoreSpaces = Console.ReadLine() == "o";
+            Console.Write("-Ignorer les tabulations [o/n]: "); bool ignoreTabs = Console.ReadLine() == "o";
+            Console.Write("-Ignorer la casse [o/n]: "); bool ignoreCase = Console.ReadLine() == "o";
+
+            var cleaners = new List<Func<string, string>>();
+            if (ignoreSpaces) cleaners.Add(cleanSpaces);
+            if (ignoreTabs) cleaners.Add(cleanTabs);
+            if (ignoreCase) cleaners.Add(enforceCase);
+
+            // Composition par Aggregate : s → f3(f2(f1(s)))
+            Func<string, string> clean = s => cleaners.Aggregate(s, (acc, f) => f(acc));
+
+            // Application conditionnelle (si pas de cleaners, clean = identitaire)
+            if (cleaners.Count > 0)
+            {
+                linesA = linesA.Select(clean).ToArray();
+                linesB = linesB.Select(clean).ToArray();
+                Console.WriteLine(">Nettoyage appliqué\n");
+            }
+
+            // 4) Construire les comparaisons (Number, ContentA, ContentB)
+            var comparisons = linesA
+                .Select((line, idx) => new LinesComparison
+                {
+                    Number = idx,
+                    ContentA = line,
+                    ContentB = linesB[idx]
+                })
+                .ToList();
+
+            // 5) Sélectionner les lignes différentes
+            var diffs = comparisons.Where(c => c.ContentA != c.ContentB).ToList();
+            int sameCount = linesA.Length - diffs.Count;
+            Console.WriteLine($"Lignes identiques: {sameCount}\nLignes différentes: {diffs.Count}\n");
+
+            // Compteur de différences caractère par caractère (Zip + longueur restante)
+            Func<LinesComparison, int> countVariations = c =>
+                c.ContentA.Zip(c.ContentB, (a, b) => a == b ? 0 : 1).Sum() + c.LengthVariation;
+
+            // 6) Affichage simple + coloré
+            foreach (var c in diffs)
+            {
+                Console.WriteLine($">Ligne {c.NumberHuman} : {countVariations(c)} différences");
+                PrintColoredDiff(c);
+                Console.WriteLine();
+            }
+
+            // 7) Chiffrement César (lettres seulement, clé [1..25])
+            Console.Write("\nSPECIAL FEATURE — Clé de chiffrement [1-25] (Enter pour ignorer): ");
+            var raw = Console.ReadLine();
+            if (byte.TryParse(raw, out var key) && key >= 1 && key <= 25)
+            {
+                var cipheredA = linesA.Select(line => Caesar(line, key));
+                File.WriteAllLines("cipheredA.txt", cipheredA);
+                Console.WriteLine(">Fichier 'cipheredA.txt' écrit (César). Pour déchiffrer: utiliser 26 - clé.");
+            }
+        }
+
+        // === Helpers =====================================================
+        private static void PrintColoredDiff(LinesComparison c)
+        {
+            var def = Console.ForegroundColor;
+            Console.Write($"   ");
+            foreach (var pair in c.ContentA.Zip(c.ContentB, (a, b) => (a, b)))
+            {
+                if (pair.a == pair.b)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(pair.a);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write($"[{pair.a}/{pair.b}]");
+                }
+            }
+            Console.ForegroundColor = def;
+            Console.WriteLine();
+        }
+
+        private static string Caesar(string s, int key)
+            => new string(s.Select(c => ShiftLetter(c, key)).ToArray());
+
+        private static char ShiftLetter(char ch, int key)
+        {
+            if (char.IsLetter(ch))
+            {
+                var a = char.IsUpper(ch) ? 'A' : 'a';
+                // wrap 0..25
+                return (char)(a + ((ch - a + key) % 26));
+            }
+            return ch; // on laisse chiffres/ponctuation inchangés
+        }
+    }
+
+    // Même modèle que l'énoncé (classe simple; record possible aussi)
+    public class LinesComparison
+    {
+        public int Number { get; set; }
+        public string ContentA { get; set; } = string.Empty;
+        public string ContentB { get; set; } = string.Empty;
+
+        public int NumberHuman => Number + 1;
+        public int LengthVariation => Math.Abs(ContentA.Length - ContentB.Length);
+    }
+}
+
